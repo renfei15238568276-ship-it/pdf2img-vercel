@@ -4,43 +4,41 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>📄 PDF工具箱 - VIP</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script></body></html>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script></body></html>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script></body></html>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script></body></html>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 15px; }
     .container { max-width: 500px; margin: 0 auto; background: white; border-radius: 16px; padding: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
     h1 { color: #333; margin-bottom: 15px; font-size: 20px; text-align: center; }
-    .menu { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px; }
-    .menu-item { background: #f5f5f5; padding: 15px; border-radius: 12px; text-align: center; cursor: pointer; transition: all 0.2s; }
-    .menu-item:hover { background: #e8e8e8; transform: scale(1.02); }
+    .menu { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+    .menu-item { background: #f5f5f5; padding: 12px; border-radius: 10px; text-align: center; cursor: pointer; transition: all 0.2s; }
+    .menu-item:hover { background: #e8e8e8; }
     .menu-item.active { background: #667eea; color: white; }
-    .menu-icon { font-size: 28px; margin-bottom: 5px; }
-    .menu-text { font-size: 14px; font-weight: bold; }
+    .menu-icon { font-size: 24px; }
+    .menu-text { font-size: 12px; font-weight: bold; margin-top: 4px; }
     .section { display: none; }
     .section.active { display: block; }
     .settings { background: #f5f5f5; padding: 12px; border-radius: 10px; margin-bottom: 12px; }
     .setting-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
     .setting-label { color: #666; font-size: 13px; }
-    select { padding: 6px; border: 1px solid #ddd; border-radius: 6px; font-size: 13px; }
-    .upload-area { border: 2px dashed #667eea; border-radius: 10px; padding: 30px 15px; text-align: center; cursor: pointer; background: #f8fafc; }
-    .upload-icon { font-size: 40px; }
-    .upload-text { color: #667eea; margin-top: 8px; font-size: 14px; }
-    #fileInput, #imgInput { display: none; }
-    #preview { margin-top: 12px; }
-    .preview-item { background: #f9f9f9; padding: 10px; border-radius: 8px; margin-bottom: 8px; }
-    .preview-item img { max-width: 100%; border-radius: 6px; }
+    input[type="text"], input[type="password"], select { padding: 6px; border: 1px solid #ddd; border-radius: 6px; font-size: 13px; }
+    .upload-area { border: 2px dashed #667eea; border-radius: 10px; padding: 25px 15px; text-align: center; cursor: pointer; background: #f8fafc; }
+    .upload-icon { font-size: 32px; }
+    .upload-text { color: #667eea; margin-top: 6px; font-size: 13px; }
+    #fileInput, #imgInput, #mergeInput, #encryptInput, #compressInput, #decryptInput { display: none; }
+    .preview { margin-top: 12px; }
+    .preview-item { background: #f9f9f9; padding: 8px; border-radius: 6px; margin-bottom: 6px; font-size: 12px; }
     .btn { display: block; width: 100%; padding: 12px; background: #667eea; color: white; border: none; border-radius: 8px; font-size: 14px; font-weight: bold; cursor: pointer; margin-top: 10px; }
     .vip-badge { display: none; background: linear-gradient(90deg, #ffd700, #ffaa00); color: #000; padding: 6px 12px; border-radius: 20px; font-weight: bold; font-size: 12px; margin-bottom: 10px; text-align: center; }
     .vip-badge.show { display: block; }
-    .history-btn { position: fixed; bottom: 15px; right: 15px; width: 40px; height: 40px; background: #667eea; border-radius: 50%; font-size: 18px; }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>📄 PDF工具箱</h1>
-    
     <div class="vip-badge" id="vipBadge">👑 VIP会员</div>
     
     <div class="menu">
@@ -56,29 +54,25 @@
         <div class="menu-icon">📑</div>
         <div class="menu-text">PDF合并</div>
       </div>
+      <div class="menu-item" onclick="showSection('pdfcompress')">
+        <div class="menu-icon">📉</div>
+        <div class="menu-text">PDF压缩</div>
+      </div>
       <div class="menu-item" onclick="showSection('pdfencrypt')">
         <div class="menu-icon">🔒</div>
         <div class="menu-text">PDF加密</div>
+      </div>
+      <div class="menu-item" onclick="showSection('pdfdecrypt')">
+        <div class="menu-icon">🔓</div>
+        <div class="menu-text">PDF解密</div>
       </div>
     </div>
     
     <!-- PDF转图片 -->
     <div class="section active" id="pdf2img">
       <div class="settings">
-        <div class="setting-row">
-          <span class="setting-label">图片质量</span>
-          <select id="quality">
-            <option value="1">标准</option>
-            <option value="2">高清</option>
-          </select>
-        </div>
-        <div class="setting-row">
-          <span class="setting-label">图片格式</span>
-          <select id="format">
-            <option value="png">PNG</option>
-            <option value="jpeg">JPEG</option>
-          </select>
-        </div>
+        <div class="setting-row"><span class="setting-label">图片质量</span><select id="quality"><option value="1">标准</option><option value="2">高清</option></select></div>
+        <div class="setting-row"><span class="setting-label">图片格式</span><select id="format"><option value="png">PNG</option><option value="jpeg">JPEG</option></select></div>
       </div>
       <div class="upload-area" onclick="document.getElementById('fileInput').click()">
         <div class="upload-icon">📁</div>
@@ -95,7 +89,7 @@
         <div class="upload-text">点击选择图片（可多选）</div>
       </div>
       <input type="file" id="imgInput" accept="image/*" multiple onchange="handleImgFiles(this.files)">
-      <div id="imgPreview"></div>
+      <div id="imgPreview" class="preview"></div>
       <button class="btn" onclick="convertImgToPdf()">转换为PDF</button>
     </div>
     
@@ -106,47 +100,65 @@
         <div class="upload-text">点击选择多个PDF文件</div>
       </div>
       <input type="file" id="mergeInput" accept=".pdf" multiple onchange="handleMergeFiles(this.files)">
-      <div id="mergePreview"></div>
+      <div id="mergePreview" class="preview"></div>
       <button class="btn" onclick="mergePdfs()">合并PDF</button>
+    </div>
+    
+    <!-- PDF压缩 -->
+    <div class="section" id="pdfcompress">
+      <div class="settings">
+        <div class="setting-row"><span class="setting-label">压缩程度</span><select id="compressLevel"><option value="1">低（质量高）</option><option value="2">中（平衡）</option><option value="3">高（体积小）</option></select></div>
+      </div>
+      <div class="upload-area" onclick="document.getElementById('compressInput').click()">
+        <div class="upload-icon">📉</div>
+        <div class="upload-text">点击选择要压缩的PDF</div>
+      </div>
+      <input type="file" id="compressInput" accept=".pdf" onchange="handleCompressFile(this.files[0])">
+      <div id="compressPreview" class="preview"></div>
+      <button class="btn" onclick="compressPdf()">压缩PDF</button>
     </div>
     
     <!-- PDF加密 -->
     <div class="section" id="pdfencrypt">
       <div class="settings">
-        <div class="setting-row">
-          <span class="setting-label">设置密码</span>
-          <input type="text" id="encryptPwd" placeholder="请输入密码" style="width:120px;padding:6px;">
-        </div>
+        <div class="setting-row"><span class="setting-label">设置密码</span><input type="password" id="encryptPwd" placeholder="请输入密码"></div>
       </div>
       <div class="upload-area" onclick="document.getElementById('encryptInput').click()">
         <div class="upload-icon">🔒</div>
         <div class="upload-text">点击选择要加密的PDF</div>
       </div>
       <input type="file" id="encryptInput" accept=".pdf" onchange="handleEncryptFile(this.files[0])">
-      <div id="encryptPreview"></div>
+      <div id="encryptPreview" class="preview"></div>
       <button class="btn" onclick="encryptPdf()">加密PDF</button>
     </div>
-  </div>
-  
-  <div class="history-btn" onclick="showHistory()">📜</div>
-  
-  <div id="historyModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:999;">
-    <div style="background:white;padding:16px;max-height:80vh;overflow-y:auto;border-radius:16px;margin:15px;">
-      <h3>📜 转换历史</h3>
-      <div id="historyList"></div>
-      <button onclick="document.getElementById('historyModal').style.display='none'" style="margin-top:12px;padding:10px;width:100%;background:#667eea;color:white;border:none;border-radius:8px;">关闭</button>
+    
+    <!-- PDF解密 -->
+    <div class="section" id="pdfdecrypt">
+      <div class="settings">
+        <div class="setting-row"><span class="setting-label">输入密码</span><input type="password" id="decryptPwd" placeholder="请输入PDF密码"></div>
+      </div>
+      <div class="upload-area" onclick="document.getElementById('decryptInput').click()">
+        <div class="upload-icon">🔓</div>
+        <div class="upload-text">点击选择要解密的PDF</div>
+      </div>
+      <input type="file" id="decryptInput" accept=".pdf" onchange="handleDecryptFile(this.files[0])">
+      <div id="decryptPreview" class="preview"></div>
+      <button class="btn" onclick="decryptPdf()">解密PDF</button>
     </div>
   </div>
   
   <script>
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
     const { jsPDF } = window.jspdf;
+    const { PDFDocument } = PDFLib;
     
     let currentFileName = '';
     let convertedImages = [];
     let selectedImages = [];
-    let mergeFiles = [];
-    let encryptFile = null;
+    let mergeFilesList = [];
+    let compressFileData = null;
+    let encryptFileData = null;
+    let decryptFileData = null;
     
     function showSection(id) {
       document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
@@ -155,18 +167,8 @@
       event.currentTarget.classList.add('active');
     }
     
-    function addHistory(name, type) {
-      const history = JSON.parse(localStorage.getItem('pdfHistory') || '[]');
-      history.unshift({ name, type, date: new Date().toLocaleString() });
-      localStorage.setItem('pdfHistory', JSON.stringify(history.slice(0, 20)));
-    }
-    
-    function showHistory() {
-      const history = JSON.parse(localStorage.getItem('pdfHistory') || '[]');
-      document.getElementById('historyList').innerHTML = history.length ? 
-        history.map(h => `<div style="padding:8px;border-bottom:1px solid #eee;font-size:12px;">${h.type}<br>${h.name || ''}<br>${h.date}</div>`).join('') : 
-        '<p style="color:#999;">暂无记录</p>';
-      document.getElementById('historyModal').style.display = 'block';
+    function showResult(id, html) {
+      document.getElementById(id).innerHTML = html;
     }
     
     // PDF转图片
@@ -175,13 +177,9 @@
       currentFileName = file.name;
       const quality = parseFloat(document.getElementById('quality').value);
       const format = document.getElementById('format').value;
-      
       const arrayBuffer = await file.arrayBuffer();
       const pdf = await pdfjsLib.getDocument({data: arrayBuffer}).promise;
-      
-      const preview = document.getElementById('preview');
-      preview.innerHTML = '<div style="text-align:center;padding:15px;">⏳ 转换中...</div>';
-      
+      showResult('preview', '<div style="text-align:center;padding:15px;">⏳ 转换中...</div>');
       convertedImages = [];
       for (let i = 1; i <= pdf.numPages; i++) {
         const page = await pdf.getPage(i);
@@ -191,25 +189,18 @@
         canvas.height = viewport.height;
         await page.render({canvasContext: canvas.getContext('2d'), viewport}).promise;
         convertedImages.push({ page: i, data: canvas.toDataURL('image/' + format, 0.9) });
-        preview.innerHTML = `<div style="text-align:center;">⏳ ${i}/${pdf.numPages}</div>`;
+        showResult('preview', `<div style="text-align:center;">⏳ ${i}/${pdf.numPages}</div>`);
       }
-      
-      addHistory(file.name, 'PDF转图片');
-      
       let html = `<div style="margin-bottom:10px;">✅ 完成 (${pdf.numPages}页)</div>`;
-      convertedImages.forEach(img => {
-        html += `<div class="preview-item"><img src="${img.data}"></div>`;
-      });
+      convertedImages.forEach(img => { html += `<div class="preview-item"><img src="${img.data}" style="max-width:100%"></div>`; });
       html += '<button class="btn" onclick="downloadAllImages()">📦 批量下载</button>';
-      preview.innerHTML = html;
+      showResult('preview', html);
     }
     
     async function downloadAllImages() {
       const format = document.getElementById('format').value;
       const zip = new JSZip();
-      convertedImages.forEach(img => {
-        zip.file(`page_${img.page}.${format}`, img.data.split(',')[1], {base64: true});
-      });
+      convertedImages.forEach(img => { zip.file(`page_${img.page}.${format}`, img.data.split(',')[1], {base64: true}); });
       const blob = await zip.generateAsync({type:'blob'});
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
@@ -221,16 +212,14 @@
     function handleImgFiles(files) {
       selectedImages = Array.from(files);
       let html = '<div style="margin:10px 0;">已选择 ' + files.length + ' 张图片</div>';
-      Array.from(files).forEach((f, i) => {
-        html += `<div class="preview-item">${i+1}. ${f.name}</div>`;
-      });
-      document.getElementById('imgPreview').innerHTML = html;
+      Array.from(files).forEach((f, i) => { html += `<div class="preview-item">${i+1}. ${f.name}</div>`; });
+      showResult('imgPreview', html);
     }
     
     function convertImgToPdf() {
       if (selectedImages.length === 0) { alert('请先选择图片'); return; }
-      
       const doc = new jsPDF();
+      let loaded = 0;
       selectedImages.forEach((file, i) => {
         const reader = new FileReader();
         reader.onload = function(e) {
@@ -239,10 +228,11 @@
             if (i > 0) doc.addPage();
             const imgWidth = 210;
             const imgHeight = (img.height * imgWidth) / img.width;
-            doc.addImage(e.target.result, 'JPEG', 0, 0, imgWidth, imgHeight);
-            if (i === selectedImages.length - 1) {
-              doc.save('converted.pdf');
-              addHistory('图片转PDF', '图片转PDF');
+            doc.addImage(e.target.result, 'JPEG', 0, 0, imgWidth, Math.min(imgHeight, 297));
+            loaded++;
+            if (loaded === selectedImages.length) {
+              doc.save('images.pdf');
+              alert('✅ PDF已生成！');
             }
           };
           img.src = e.target.result;
@@ -253,32 +243,104 @@
     
     // PDF合并
     function handleMergeFiles(files) {
-      mergeFiles = Array.from(files);
+      mergeFilesList = Array.from(files);
       let html = '<div style="margin:10px 0;">已选择 ' + files.length + ' 个PDF</div>';
-      Array.from(files).forEach((f, i) => {
-        html += `<div class="preview-item">${i+1}. ${f.name}</div>`;
-      });
-      document.getElementById('mergePreview').innerHTML = html;
+      Array.from(files).forEach((f, i) => { html += `<div class="preview-item">${i+1}. ${f.name}</div>`; });
+      if (files.length >= 2) html += '<button class="btn" onclick="mergePdfs()">开始合并</button>';
+      showResult('mergePreview', html);
     }
     
     async function mergePdfs() {
-      if (mergeFiles.length < 2) { alert('请至少选择2个PDF'); return; }
-      alert('合并功能开发中...');
+      if (mergeFilesList.length < 2) { alert('请至少选择2个PDF'); return; }
+      try {
+        const mergedPdf = await PDFDocument.create();
+        for (const file of mergeFilesList) {
+          const arrayBuffer = await file.arrayBuffer();
+          const pdf = await PDFDocument.load(arrayBuffer);
+          const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
+          copiedPages.forEach(page => mergedPdf.addPage(page));
+        }
+        const pdfBytes = await mergedPdf.save();
+        const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'merged.pdf';
+        a.click();
+        alert('✅ 合并成功！');
+      } catch(e) { alert('合并失败: ' + e.message); }
+    }
+    
+    // PDF压缩
+    function handleCompressFile(file) {
+      if (!file) return;
+      compressFileData = file;
+      showResult('compressPreview', `<div class="preview-item">📄 ${file.name} (${(file.size/1024/1024).toFixed(2)}MB)</div><button class="btn" onclick="compressPdf()">开始压缩</button>`);
+    }
+    
+    async function compressPdf() {
+      if (!compressFileData) { alert('请先选择PDF'); return; }
+      try {
+        const arrayBuffer = await compressFileData.arrayBuffer();
+        const pdfDoc = await PDFDocument.load(arrayBuffer);
+        const pdfBytes = await pdfDoc.save({ useObjectStreams: true });
+        const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'compressed.pdf';
+        a.click();
+        alert('✅ 压缩完成！');
+      } catch(e) { alert('压缩失败: ' + e.message); }
     }
     
     // PDF加密
     function handleEncryptFile(file) {
       if (!file) return;
-      encryptFile = file;
-      document.getElementById('encryptPreview').innerHTML = '<div class="preview-item">📄 ' + file.name + '</div>';
+      encryptFileData = file;
+      showResult('encryptPreview', `<div class="preview-item">📄 ${file.name}</div><button class="btn" onclick="encryptPdf()">开始加密</button>`);
     }
     
-    function encryptPdf() {
-      if (!encryptFile) { alert('请先选择PDF'); return; }
+    async function encryptPdf() {
+      if (!encryptFileData) { alert('请先选择PDF'); return; }
       const pwd = document.getElementById('encryptPwd').value;
       if (!pwd) { alert('请输入密码'); return; }
-      alert('加密功能开发中...');
+      try {
+        const arrayBuffer = await encryptFileData.arrayBuffer();
+        const pdfDoc = await PDFDocument.load(arrayBuffer);
+        pdfDoc.encrypt({ userPassword: pwd, ownerPassword: pwd, permissions: { printing: 'high' } });
+        const pdfBytes = await pdfDoc.save();
+        const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'encrypted.pdf';
+        a.click();
+        alert('✅ 加密完成！');
+      } catch(e) { alert('加密失败: ' + e.message); }
     }
-  </script>
+    
+    // PDF解密
+    function handleDecryptFile(file) {
+      if (!file) return;
+      decryptFileData = file;
+      showResult('decryptPreview', `<div class="preview-item">📄 ${file.name}</div><button class="btn" onclick="decryptPdf()">开始解密</button>`);
+    }
+    
+    async function decryptPdf() {
+      if (!decryptFileData) { alert('请先选择PDF'); return; }
+      const pwd = document.getElementById('decryptPwd').value;
+      if (!pwd) { alert('请输入PDF密码'); return; }
+      try {
+        const arrayBuffer = await decryptFileData.arrayBuffer();
+        const pdfDoc = await PDFDocument.load(arrayBuffer, { password: pwd });
+        pdfDoc.encrypt({ userPassword: '', ownerPassword: '' });
+        const pdfBytes = await pdfDoc.save();
+        const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'decrypted.pdf';
+        a.click();
+        alert('✅ 解密完成！');
+      } catch(e) { alert('解密失败，请检查密码是否正确'); }
+    }
+  </script></body></html>
 </body>
 </html>
