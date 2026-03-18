@@ -41,6 +41,8 @@
     .history-btn { position: fixed; bottom: 20px; right: 20px; width: 44px; height: 44px; background: #07c160; border-radius: 50%; font-size: 20px; }
     .step { display: none; }
     .step.active { display: block; }
+    .code-input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; margin-top: 10px; text-align: center; }
+    .warning { background: #fff3cd; color: #856404; padding: 10px; border-radius: 8px; font-size: 12px; margin: 10px 0; }
   </style>
 </head>
 <body>
@@ -92,28 +94,25 @@
         <div class="vip-price">¥9.9/月</div>
         
         <img src="https://raw.githubusercontent.com/renfei15238568276-ship-it/pdf2img-images/main/wechat.jpg" class="qr-img" alt="微信支付">
-        <p style="font-size:12px;color:#999;margin:8px 0;">长按二维码付款</p>
+        <p style="font-size:12px;color:#666;margin:8px 0;">长按二维码付款 ¥9.9</p>
         
         <button class="vip-btn vip-btn-pay" onclick="showStep2()">💳 我已付款</button>
         <button class="vip-btn vip-close" onclick="closeVip()">取消</button>
       </div>
       
-      <!-- 步骤2: 确认 -->
+      <!-- 步骤2: 联系客服 -->
       <div class="step" id="step2">
-        <div style="font-size:48px;">✅</div>
-        <h3 style="margin:15px 0;color:#07c160;">请确认</h3>
-        <p style="font-size:14px;color:#666;margin-bottom:15px;">您已经向客服付款了吗？</p>
+        <div style="font-size:48px;">⏰</div>
+        <h3 style="margin:15px 0;">等待确认</h3>
+        <p style="font-size:14px;color:#666;margin-bottom:15px;">付款后请截图发给微信客服<br><strong>r18974670134</strong><br>客服确认后会给您兑换码</p>
         
-        <button class="vip-btn" onclick="activateVip()">✅ 确认付款，开通VIP</button>
-        <button class="vip-btn vip-close" onclick="showStep1()">还没付</button>
-      </div>
-      
-      <!-- 步骤3: 成功 -->
-      <div class="step" id="step3">
-        <div style="font-size:48px;">🎉</div>
-        <h3 style="margin:15px 0;color:#07c160;">VIP开通成功！</h3>
-        <p style="font-size:14px;color:#666;">您现在可以批量下载了</p>
-        <button class="vip-btn" onclick="closeVip()">知道了</button>
+        <div class="code-input-section">
+          <p style="font-size:13px;color:#666;">收到兑换码后输入：</p>
+          <input type="text" id="vipCode" class="code-input" placeholder="请输入兑换码">
+          <button class="vip-btn" style="margin-top:10px;" onclick="redeemCode()">立即兑换</button>
+        </div>
+        
+        <button class="vip-btn vip-close" style="margin-top:15px;" onclick="showStep1()">返回</button>
       </div>
     </div>
   </div>
@@ -149,7 +148,6 @@
     }
     function closeVip() { 
       document.getElementById('vipModal').classList.remove('show');
-      setTimeout(() => showStep1(), 300);
     }
     function showStep1() {
       document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
@@ -159,24 +157,24 @@
       document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
       document.getElementById('step2').classList.add('active');
     }
-    function activateVip() {
-      isVip = true;
-      localStorage.setItem('isVip', 'true');
-      
-      document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
-      document.getElementById('step3').classList.add('active');
-      
-      document.getElementById('vipBadge').classList.add('show');
-      document.getElementById('vipBanner').innerHTML = '👑 VIP会员专享';
-      document.getElementById('vipBanner').classList.add('vip-banner-vip');
-      
-      // 刷新页面让下载按钮生效
-      setTimeout(() => {
-        if (document.getElementById('preview').innerHTML) {
-          const btn = document.querySelector('.download-btn');
-          if (btn) btn.innerHTML = '📦 批量下载';
-        }
-      }, 500);
+    function redeemCode() {
+      const code = document.getElementById('vipCode').value.trim().toUpperCase();
+      if (code.startsWith('VIP') && code.length >= 10) {
+        isVip = true;
+        localStorage.setItem('isVip', 'true');
+        
+        document.getElementById('vipBadge').classList.add('show');
+        document.getElementById('vipBanner').innerHTML = '👑 VIP会员专享';
+        document.getElementById('vipBanner').classList.add('vip-banner-vip');
+        
+        alert('✅ VIP开通成功！');
+        closeVip();
+        
+        // 刷新页面更新按钮
+        location.reload();
+      } else {
+        alert('兑换码无效，请联系客服获取正确的兑换码');
+      }
     }
     function showHistory() {
       const history = JSON.parse(localStorage.getItem('pdfHistory') || '[]');
